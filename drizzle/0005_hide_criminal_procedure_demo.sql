@@ -1,0 +1,13 @@
+UPDATE "questions"
+SET "published" = false, "updated_at" = now()
+WHERE "id" IN (
+  '20000000-0000-0000-0000-000000000003',
+  '20000000-0000-0000-0000-000000000004'
+);
+
+UPDATE "units"
+SET "published" = false
+WHERE "id" IN (
+  '10000000-0000-0000-0000-000000000003',
+  '10000000-0000-0000-0000-000000000004'
+);
