@@ -25,7 +25,7 @@ npm run dev
 개발 전용 데모 계정(프로덕션에서는 비활성화):
 
 - 학습자: `student@hapgyeokmate.com` / `demo1234`
-- 관리자: `admin@hapgyeokmate.com` / `demo1234`
+- 운영 관리자 계정은 배포 시 초기화되며 비밀번호는 저장소에 포함하지 않습니다.
 
 ## 환경변수와 DB
 
