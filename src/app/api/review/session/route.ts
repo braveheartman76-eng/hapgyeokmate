@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/db";
-import { examSessions, questionsTable, questionVersions, reviewItems, sessionQuestions } from "@/db/schema";
+import { examSessions, questionsTable, questionVersions, sessionQuestions } from "@/db/schema";
 import { getSession } from "@/lib/auth";
 
 const input = z.object({ questionId: z.string().uuid() });
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const parsed = input.safeParse(await request.json());
   if (!parsed.success) return NextResponse.json({ error: "문제를 지정해 주세요." }, { status: 400 });
   const db = getDb();
-  const item = (await db.select({ questionId: reviewItems.questionId, subjectId: questionsTable.subjectId }).from(reviewItems).innerJoin(questionsTable, eq(reviewItems.questionId, questionsTable.id)).where(and(eq(reviewItems.userId, user.userId), eq(reviewItems.questionId, parsed.data.questionId), eq(reviewItems.status, "pending"), eq(questionsTable.published, true))).limit(1))[0];
+  const item = (await db.select({ questionId:questionsTable.id, subjectId:questionsTable.subjectId }).from(questionsTable).where(and(eq(questionsTable.id,parsed.data.questionId),eq(questionsTable.published,true))).limit(1))[0];
   if (!item) return NextResponse.json({ error: "복습할 문제를 찾을 수 없습니다." }, { status: 404 });
   const version = (await db.select({ id: questionVersions.id }).from(questionVersions).where(eq(questionVersions.questionId, item.questionId)).orderBy(desc(questionVersions.version)).limit(1))[0];
   if (!version) return NextResponse.json({ error: "문제 버전을 찾을 수 없습니다." }, { status: 409 });
