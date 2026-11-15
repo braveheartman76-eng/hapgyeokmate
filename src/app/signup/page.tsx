@@ -1,0 +1,11 @@
+"use client";
+import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, UserPlus } from "lucide-react";
+
+export default function SignupPage(){
+  const router=useRouter(); const [form,setForm]=useState({name:"",email:"",password:"",confirm:""}); const [error,setError]=useState(""); const [loading,setLoading]=useState(false);
+  async function submit(event:FormEvent){event.preventDefault();setError("");if(form.password!==form.confirm){setError("비밀번호 확인이 일치하지 않습니다.");return;}setLoading(true);const response=await fetch("/api/auth/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:form.name,email:form.email,password:form.password})});const body=await response.json();setLoading(false);if(!response.ok){setError(body.error??"가입하지 못했습니다.");return;}router.push("/");router.refresh();}
+  return <main className="page-container auth-page"><header className="page-header"><div><Link href="/login" className="back-link"><ArrowLeft size={15}/> 로그인</Link><h1>합격메이트<br/>시작하기</h1><p>학습 기록을 안전하게 이어가세요.</p></div></header><form className="list-card form-grid" onSubmit={submit}><span className="subject-icon"><UserPlus/></span><div className="field"><label htmlFor="name">이름</label><input id="name" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})} autoComplete="name" required minLength={2}/></div><div className="field"><label htmlFor="signup-email">이메일</label><input id="signup-email" type="email" value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})} autoComplete="email" required/></div><div className="field"><label htmlFor="signup-password">비밀번호</label><input id="signup-password" type="password" value={form.password} onChange={(e)=>setForm({...form,password:e.target.value})} autoComplete="new-password" required minLength={10}/><span className="field-help">영문과 숫자를 포함해 10자 이상 입력해 주세요.</span></div><div className="field"><label htmlFor="confirm-password">비밀번호 확인</label><input id="confirm-password" type="password" value={form.confirm} onChange={(e)=>setForm({...form,confirm:e.target.value})} autoComplete="new-password" required/></div>{error&&<p className="form-error">{error}</p>}<button className="primary-button" disabled={loading}>{loading?"가입 중...":"회원가입"}</button></form></main>;
+}

@@ -1,0 +1,5 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
+export function StartExamButton({subjectId,count=20}:{subjectId:string;count?:number}){const router=useRouter();const [loading,setLoading]=useState(false);const [error,setError]=useState("");async function start(){setLoading(true);setError("");const response=await fetch("/api/exams",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({subjectId,count})});const body=await response.json();setLoading(false);if(response.status===401){router.push(`/login?next=${encodeURIComponent(`/subjects/${subjectId}`)}`);return;}if(!response.ok){setError(body.error??"시험을 시작하지 못했습니다.");return;}router.push(`/exam/${body.sessionId}`);}return <div className="exam-start"><button className="primary-button" onClick={start} disabled={loading}>{loading?"시험 준비 중...":`${count}문제 시험 시작`}<ArrowRight size={17}/></button>{error&&<p className="form-error">{error}</p>}</div>}
