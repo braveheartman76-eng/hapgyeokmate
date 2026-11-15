@@ -1,0 +1,2 @@
+import { z } from "zod";
+export const questionInput = z.object({ subjectId:z.string().min(1), unitId:z.string().uuid().nullable().optional(), prompt:z.string().min(5), choices:z.array(z.string().min(1)).length(4), correctIndex:z.number().int().min(0).max(3), explanation:z.string().min(5), source:z.string().default(""), difficulty:z.enum(["기본","보통","심화"]).default("보통"), published:z.boolean().default(false) });

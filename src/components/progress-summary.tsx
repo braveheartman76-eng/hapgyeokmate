@@ -1,0 +1,4 @@
+"use client";
+import { useEffect, useState } from "react";
+import { loadAttempts } from "@/lib/progress";
+export function ProgressSummary() { const [stats, setStats] = useState({ solved: 0, accuracy: 0, wrong: 0 }); useEffect(() => { const update = () => { const attempts = loadAttempts(); const correct = attempts.filter((item) => item.correct).length; setStats({ solved: attempts.length, accuracy: attempts.length ? Math.round(correct / attempts.length * 100) : 0, wrong: attempts.length - correct }); }; update(); window.addEventListener("hapgyeokmate:progress", update); return () => window.removeEventListener("hapgyeokmate:progress", update); }, []); return <div className="stats-grid"><div><strong>{stats.solved}</strong><span>푼 문제</span></div><div><strong>{stats.accuracy}%</strong><span>정답률</span></div><div><strong>{stats.wrong}</strong><span>복습 대기</span></div></div>; }

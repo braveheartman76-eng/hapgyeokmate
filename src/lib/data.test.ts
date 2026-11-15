@@ -1,0 +1,3 @@
+import { describe, expect, it } from "vitest";
+import { getQuestions, questions, subjects } from "./data";
+describe("question bank", () => { it("keeps answers inside each choice range", () => { for (const question of questions) expect(question.correctIndex).toBeLessThan(question.choices.length); }); it("links every question to a known subject", () => { const ids = new Set(subjects.map((subject) => subject.id)); for (const question of questions) expect(ids.has(question.subjectId)).toBe(true); }); it("filters by subject and unit", () => { expect(getQuestions("criminal-law","형법의 기초").map((question) => question.id)).toEqual(["cl-001"]); }); });

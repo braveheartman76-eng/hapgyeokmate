@@ -1,0 +1,5 @@
+import Link from "next/link";
+import { ArrowRight, BookOpen } from "lucide-react";
+import { subjects } from "@/lib/data";
+export const metadata = { title: "과목 선택" };
+export default function SubjectsPage() { return <main className="page-container"><header className="page-header"><div><p>SUBJECTS</p><h1>학습할 과목을 선택하세요</h1></div></header><div className="desktop-two-col">{subjects.map((subject) => <Link href={subject.available ? `/subjects/${subject.id}` : "#"} aria-disabled={!subject.available} className={`list-card ${!subject.available ? "disabled" : ""}`} key={subject.id} style={{ display:"flex", gap:16, alignItems:"center", opacity:subject.available ? 1 : .55 }}><span className="subject-icon" style={{ background:`${subject.color}18`, color:subject.color }}><BookOpen /></span><div style={{ flex:1 }}><strong>{subject.name}</strong><p className="muted" style={{ margin:"5px 0 0" }}>{subject.description}</p></div>{subject.available ? <ArrowRight size={18}/> : <span className="pill">준비 중</span>}</Link>)}</div></main>; }
